@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>A* Weighted Java Code</title>
+<style>
+body { font-family: monospace; background: #111; color: #0f0; }
+pre { padding: 20px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+
+<h2>A* Weighted Java Code</h2>
+
+<pre><code>
+import java.util.*;
+
+class AStarWeighted {
+
+    static class Edge {
+        int to, weight;
+        Edge(int t, int w) {
+            to = t;
+            weight = w;
+        }
+    }
+
+    static class Node {
+        int vertex, g, f;
+        Node(int v, int g, int f) {
+            this.vertex = v;
+            this.g = g;
+            this.f = f;
+        }
+    }
+
+    public static void main(String[] args) {
+
+        int V = 9, start = 1, goal = 8;
+
+        List&lt;List&lt;Edge&gt;&gt; adj = new ArrayList&lt;&gt;();
+        for (int i = 0; i &lt; V; i++) adj.add(new ArrayList&lt;&gt;());
+
+        // Weighted edges
+        adj.get(1).add(new Edge(2, 2));
+        adj.get(1).add(new Edge(3, 4));
+
+        adj.get(2).add(new Edge(4, 3));
+        adj.get(2).add(new Edge(5, 2));
+
+        adj.get(3).add(new Edge(6, 5));
+        adj.get(3).add(new Edge(7, 2));
+
+        adj.get(7).add(new Edge(8, 1));
+
+        // Heuristic
+        Map&lt;Integer, Integer&gt; h = new HashMap&lt;&gt;();
+        h.put(1, 7);
+        h.put(2, 6); 
+        h.put(3, 4);
+        h.put(4, 5); 
+        h.put(5, 3); 
+        h.put(6, 6);
+        h.put(7, 1); 
+        h.put(8, 0);
+
+        aStar(adj, start, goal, h);
+    }
+
+    static void aStar(List&lt;List&lt;Edge&gt;&gt; adj, int start, int goal, Map&lt;Integer, Integer&gt; h) {
+
+        PriorityQueue&lt;Node&gt; open =
+            new PriorityQueue&lt;&gt;(Comparator.comparingInt(n -&gt; n.f));
+
+        Set&lt;Integer&gt; closed = new HashSet&lt;&gt;();
+
+        Map&lt;Integer, Integer&gt; gCost = new HashMap&lt;&gt;();
+        Map&lt;Integer, Integer&gt; parent = new HashMap&lt;&gt;();
+
+        for (int i = 0; i &lt; adj.size(); i++)
+            gCost.put(i, Integer.MAX_VALUE);
+
+        gCost.put(start, 0);
+        open.add(new Node(start, 0, h.get(start)));
+
+        while (!open.isEmpty()) {
+
+            Node current = open.poll();
+            int u = current.vertex;
+
+            if (closed.contains(u)) continue;
+
+            if (u == goal) {
+                printPath(parent, goal);
+                return;
+            }
+
+            closed.add(u);
+
+            for (Edge e : adj.get(u)) {
+                int v = e.to;
+                int weight = e.weight;
+
+                if (closed.contains(v)) continue;
+
+                int newG = gCost.get(u) + weight;
+
+                if (newG &lt; gCost.get(v)) {
+                    gCost.put(v, newG);
+                    parent.put(v, u);
+
+                    int f = newG + h.get(v);
+                    open.add(new Node(v, newG, f));
+                }
+            }
+        }
+    }
+
+    static void printPath(Map&lt;Integer, Integer&gt; parent, int goal) {
+        List&lt;Integer&gt; path = new ArrayList&lt;&gt;();
+
+        int curr = goal;
+        while (curr != 0) {
+            path.add(curr);
+            curr = parent.getOrDefault(curr, 0);
+        }
+
+        Collections.reverse(path);
+        System.out.println("Path: " + path);
+    }
+}
+</code></pre>
+
+</body>
+</html>
