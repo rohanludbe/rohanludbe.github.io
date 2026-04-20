@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>DLS Java Code</h2>
+
+<pre><code>
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class DLS{
+    public static void main(String[] args) {
+      
+        int start = 1;
+        int V=32;
+        boolean[] visited = new boolean[V];
+        List&lt;Integer&gt;[] adjList;
+
+        adjList = new List[V];
+        for(int i=start;i&lt;V;i++){
+            adjList[i] = new ArrayList&lt;&gt;();
+        }
+
+        adjList[1].addAll(Arrays.asList(2, 3));
+        adjList[2].addAll(Arrays.asList(1, 4,5));
+        adjList[3].addAll(Arrays.asList(1, 6,7));
+        adjList[4].addAll(Arrays.asList(2,8,9));
+        adjList[5].addAll(Arrays.asList(2,10,11));
+        adjList[6].addAll(Arrays.asList(3,12,13));
+        adjList[7].addAll(Arrays.asList(3,14,15));
+        adjList[8].addAll(Arrays.asList(4,16,17));
+        adjList[9].addAll(Arrays.asList(4,18,19));
+        adjList[10].addAll(Arrays.asList(5,20,21));
+        adjList[11].addAll(Arrays.asList(5,22,23));
+        adjList[12].addAll(Arrays.asList(6,24,25));
+        adjList[13].addAll(Arrays.asList(6,26,27));
+        adjList[14].addAll(Arrays.asList(7,28,29));
+        adjList[15].addAll(Arrays.asList(7,30,31));
+        adjList[16].add(8);
+        adjList[17].add(8);
+        adjList[18].add(9);
+        adjList[19].add(9);
+        adjList[20].add(10);
+        adjList[21].add(10);
+        adjList[22].add(11);
+        adjList[23].add(11);
+        adjList[24].add(12);
+        adjList[25].add(12);
+        adjList[26].add(13);
+        adjList[27].add(13);
+        adjList[28].add(14);
+        adjList[29].add(14);
+        adjList[30].add(15);
+        adjList[31].add(15);
+
+        List&lt;Integer&gt; result = new ArrayList&lt;&gt;(); 
+        Soln soln = new Soln(); 
+
+        int depthLimit = 3;
+
+        soln.dls(start, depthLimit, adjList, visited, result);
+
+        for(int i:result){
+            System.out.print(i+" ");
+        }
+    }
+}
+
+class Soln{
+    public void dls(int start, int depthLimit, List&lt;Integer&gt;[] adjList, boolean[] visited, List&lt;Integer&gt; result){
+        visited[start] = true;
+        result.add(start);
+
+        for(int i:adjList[start]){
+            if(!visited[i]){
+                depthLimit--;
+                if(depthLimit >= 0){
+                    dls(i, depthLimit, adjList, visited, result);
+                }
+                depthLimit++;
+            }
+        }
+    }
+}
+</code></pre>
+
+</body>
+</html>
