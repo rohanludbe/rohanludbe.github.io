@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Best First Search Java Code</title>
+<style>
+body { font-family: monospace; background: #111; color: #0f0; }
+pre { padding: 20px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+
+<h2>Best First Search (Java)</h2>
+
+<pre><code>
+import java.util.*;
+
+class BestFirstSearch {
+
+    static class Node {
+        int vertex, h;
+        Node(int v, int h) {
+            this.vertex = v;
+            this.h = h;
+        }
+    }
+
+    public static void main(String[] args) {
+
+        int V = 9, start = 1, goal = 8;
+
+        List&lt;List&lt;Integer&gt;&gt; adj = new ArrayList&lt;&gt;();
+        for (int i = 0; i &lt; V; i++) adj.add(new ArrayList&lt;&gt;());
+
+        adj.get(1).addAll(Arrays.asList(2, 3));
+        adj.get(2).addAll(Arrays.asList(1, 4, 5));
+        adj.get(3).addAll(Arrays.asList(1, 6, 7));
+        adj.get(4).add(2);
+        adj.get(5).add(2);
+        adj.get(6).add(3);
+        adj.get(7).addAll(Arrays.asList(3, 8));
+        adj.get(8).add(7);
+
+        Map&lt;Integer, Integer&gt; h = new HashMap&lt;&gt;();
+        h.put(1, 10);
+        h.put(2, 8);
+        h.put(3, 5);
+        h.put(4, 7);
+        h.put(5, 3);
+        h.put(6, 6);
+        h.put(7, 1);
+        h.put(8, 0);
+
+        bestFirstSearch(adj, start, goal, h);
+    }
+
+    static void bestFirstSearch(List&lt;List&lt;Integer&gt;&gt; adj, int start, int goal, Map&lt;Integer, Integer&gt; h) {
+
+        PriorityQueue&lt;Node&gt; pq =
+            new PriorityQueue&lt;&gt;(Comparator.comparingInt(n -&gt; n.h));
+
+        boolean[] visited = new boolean[adj.size()];
+        Map&lt;Integer, Integer&gt; parent = new HashMap&lt;&gt;();
+
+        pq.add(new Node(start, h.get(start)));
+
+        while (!pq.isEmpty()) {
+
+            Node current = pq.poll();
+            int u = current.vertex;
+
+            if (visited[u]) continue;
+
+            visited[u] = true;
+
+            if (u == goal) {
+                printPath(parent, goal);
+                return;
+            }
+
+            for (int v : adj.get(u)) {
+                if (!visited[v]) {
+                    pq.add(new Node(v, h.get(v)));
+                    if (!parent.containsKey(v)) {
+                        parent.put(v, u);
+                    }
+                }
+            }
+        }
+    }
+
+    static void printPath(Map&lt;Integer, Integer&gt; parent, int goal) {
+        List&lt;Integer&gt; path = new ArrayList&lt;&gt;();
+
+        int curr = goal;
+        while (curr != 0) {
+            path.add(curr);
+            curr = parent.getOrDefault(curr, 0);
+        }
+
+        Collections.reverse(path);
+
+        for (int x : path) {
+            System.out.print(x + " ");
+        }
+    }
+}
+</code></pre>
+
+</body>
+</html>
